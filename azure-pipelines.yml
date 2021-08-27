@@ -29,7 +29,7 @@ steps:
     configMode: 'manual'
     cliProjectKey: 'skizzle'
     cliProjectName: 'skizzle'
-    cliProjectVersion: '1.1.2'
+    cliProjectVersion: '1.2.0'
     cliSources: 'src'
     extraProperties: |
      # Additional properties that will be passed to the scanner, 

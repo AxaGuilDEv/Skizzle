@@ -1,33 +1,105 @@
 {
 	"name": "skizzle",
-	"version": "1.1.2",
+	"version": "2.0.1-alpha",
 	"appId": "skizzle",
 	"description": "Visualisation des pull requests",
-	"main": "public/electron.js",
+	"main": "./public/build/electron/electron.js",
 	"homepage": "./",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/AxaGuilDEv/skizzle.git"
+		"url": "https://github.com/AxaGuilDEv/skizzle"
 	},
 	"scripts": {
+		"prepare": "husky install",
 		"postinstall": "electron-builder install-app-deps",
 		"package-lock-sanitizer": "package-lock-sanitizer",
-		"precommit": "pretty-quick --staged",
-		"build": "rollup -c --extend",
-		"autobuild": "rollup -c -w --extend",
-		"start": "npm-run-all -p dev electron",
-		"electron": "electron .",
-		"dev": "run-p start:dev autobuild",
-		"test": "jest src ",
-		"test:watch": "npm run test -- --watch",
-		"test:coverage": "npm run test -- --coverage",
-		"lint": "./node_modules/.bin/eslint ./src --ext .js,.svelte --fix",
+		"svelte-build": "rollup -c --extend",
+		"electron-build": "tsc ./src/electron/electron.ts --outDir ./public/build/",
+		"build": "run-p svelte-build electron-build",
+		"svelte-autobuild": "rollup -c -w --extend",
+		"electron-autobuild": "tsc -w ./src/electron/electron.ts --outDir ./public/build/",
+		"start": "cross-env TSC_WATCHFILE=UseFsEventsWithFallbackDynamicPolling npm run dev",
+		"electron": "electron --trace-warnings .",
+		"dev": "run-p start:dev electron-autobuild svelte-autobuild",
+		"test": "jest --config jest.config.js",
+		"coverage": "jest --config jest.config.js --coverage",
+		"test:watch": "npm test -- --watch",
+		"format": "prettier --write ./src/**/*.{js,svelte,html,ts}",
+		"lint": "eslint './src/**/*.{js,ts,svelte}'",
+		"lint:fix": "eslint --fix ./src/**/*.{js,ts,svelte}",
+		"prelint": "npm run format",
 		"validate": "svelte-check --workspace src/",
-		"start:prod": "sirv --port 4567 public",
-		"start:dev": "sirv --port 4567 public --dev",
-		"electron:windows": "rm -rf release && npm run build && npx electron-builder build --windows",
-		"electron:mac": "rm -rf release && npm run build && npx electron-builder build --mac",
-		"changelog": "auto-changelog"
+		"start:prod": "sirv --port 3000 public",
+		"start:dev": "sirv --port 3000 public --dev",
+		"electron:windows": "npm run build && npx electron-builder build --windows",
+		"electron:mac": "npm run build && npx electron-builder build --mac",
+		"changelog": "auto-changelog",
+		"pack": "electron-builder --dir",
+		"dist": "electron-builder",
+		"resetmodules": "rm -rf node_modules/ && rm package-lock.json && npm i"
+	},
+	"devDependencies": {
+		"@babel/preset-env": "^7.15.0",
+		"@commitlint/cli": "^13.1.0",
+		"@commitlint/config-conventional": "^13.1.0",
+		"@crownframework/svelte-error-boundary": "^1.0.3",
+		"@rollup/plugin-commonjs": "^20.0.0",
+		"@rollup/plugin-node-resolve": "^13.0.4",
+		"@rollup/plugin-typescript": "^8.2.5",
+		"@testing-library/jest-dom": "^5.14.1",
+		"@testing-library/svelte": "^3.0.3",
+		"@tsconfig/svelte": "^2.0.1",
+		"@types/jest": "^26.0.15",
+		"@types/marked": "^3.0.0",
+		"@types/node": "^16.7.4",
+		"@types/superagent": "^4.1.12",
+		"@types/superagent-proxy": "^2.0.0",
+		"@types/uuid": "^8.3.1",
+		"babel-jest": "^26.6.3",
+		"cross-env": "^7.0.3",
+		"electron": "^13.2.3",
+		"electron-builder": "^22.11.7",
+		"electron-builder-notarize": "^1.2.0",
+		"electron-reloader": "^1.2.1",
+		"eslint": "^7.32.0",
+		"eslint-plugin-svelte3": "^3.2.0",
+		"husky": "^7.0.2",
+		"jest": "^26.6.3",
+		"jest-localstorage-mock": "^2.4.17",
+		"jest-transform-stub": "^2.0.0",
+		"msw": "^0.35.0",
+		"npm-run-all": "^4.1.5",
+		"package-lock-sanitizer": "^1.0.1",
+		"prettier": "^2.3.2",
+		"prettier-plugin-svelte": "^2.4.0",
+		"rollup": "^2.56.3",
+		"rollup-plugin-css-only": "^3.1.0",
+		"rollup-plugin-filesize": "^9.1.1",
+		"rollup-plugin-livereload": "^2.0.5",
+		"rollup-plugin-node-polyfills": "^0.2.1",
+		"rollup-plugin-svelte": "^7.1.0",
+		"rollup-plugin-svelte-svg": "^0.2.3",
+		"rollup-plugin-terser": "^7.0.2",
+		"sass": "^1.38.1",
+		"spectron": "^15.0.0",
+		"svelte": "^3.42.4",
+		"svelte-check": "^2.2.5",
+		"svelte-highlight": "^3.2.0",
+		"svelte-jester": "^1.8.2",
+		"svelte-preprocess": "^4.8.0",
+		"ts-jest": "^26.5.6",
+		"tslib": "^2.3.1",
+		"typescript": "^4.4.2"
+	},
+	"dependencies": {
+		"auto-changelog": "^2.3.0",
+		"electron-log": "^4.4.1",
+		"electron-updater": "4.3.9",
+		"marked": "^3.0.2",
+		"sirv-cli": "^1.0.14",
+		"superagent": "^6.1.0",
+		"superagent-proxy": "^2.1.0",
+		"uuid": "^8.3.2"
 	},
 	"auto-changelog": {
 		"template": "./changelog-template.hbs",
@@ -53,102 +125,99 @@
 		{
 			"name": "Hamza HAMIDI",
 			"url": "https://github.com/hamzahamidi"
+		},
+		{
+			"name": "Francis Cornaire",
+			"url": "https://github.com/Fcornaire"
+		},
+		{
+			"name": "Arnaud Bernard",
+			"url": "https://github.com/bernard-arnaud"
 		}
 	],
 	"license": "MIT",
-	"devDependencies": {
-		"@babel/core": "7.12.3",
-		"@babel/plugin-transform-runtime": "7.12.1",
-		"@babel/preset-env": "7.12.1",
-		"@babel/runtime": "7.12.1",
-		"@commitlint/cli": "^11.0.0",
-		"@commitlint/config-conventional": "^11.0.0",
-		"@rollup/plugin-commonjs": "^16.0.0",
-		"@rollup/plugin-node-resolve": "^10.0.0",
-		"@rollup/plugin-replace": "^2.3.4",
-		"@rollup/plugin-typescript": "^6.1.0",
-		"@testing-library/jest-dom": "^5.11.5",
-		"@testing-library/svelte": "^3.0.0",
-		"@tsconfig/svelte": "^1.0.10",
-		"@types/jest": "^26.0.15",
-		"@types/node": "^14.14.5",
-		"babel-core": "6.26.3",
-		"babel-jest": "26.6.1",
-		"babel-polyfill": "6.26.0",
-		"electron": "10.1.5",
-		"electron-builder": "^22.9.1",
-		"electron-builder-notarize": "^1.2.0",
-		"electron-reloader": "^1.0.1",
-		"eslint": "^7.12.1",
-		"eslint-config-airbnb-base": "^14.2.0",
-		"eslint-plugin-import": "^2.22.1",
-		"eslint-plugin-jest": "^24.1.0",
-		"eslint-plugin-svelte3": "^2.7.3",
-		"husky": "^4.3.0",
-		"jest": "26.6.1",
-		"jest-localstorage-mock": "^2.4.3",
-		"jest-transform-svelte": "^2.1.1",
-		"lint-staged": "^10.5.0",
-		"npm-run-all": "^4.1.5",
-		"package-lock-sanitizer": "^1.0.1",
-		"prettier": "^2.1.2",
-		"pretty-quick": "^3.1.0",
-		"rollup": "^2.32.1",
-		"rollup-plugin-filesize": "^9.0.2",
-		"rollup-plugin-livereload": "^2.0.0",
-		"rollup-plugin-svelte": "6.1.0",
-		"rollup-plugin-terser": "7.0.2",
-		"sass": "^1.27.0",
-		"svelte": "^3.29.4",
-		"svelte-check": "^1.1.3",
-		"svelte-jester": "^1.1.5",
-		"svelte-preprocess": "^4.5.2",
-		"ts-jest": "^26.4.3",
-		"tslib": "^2.0.3",
-		"typescript": "^4.0.5"
-	},
-	"dependencies": {
-		"auto-changelog": "^2.2.1",
-		"electron-context-menu": "2.3.0",
-		"electron-debug": "3.1.0",
-		"electron-log": "4.2.4",
-		"electron-unhandled": "3.0.2",
-		"electron-updater": "4.3.5",
-		"electron-util": "0.14.2",
-		"sirv-cli": "1.0.8"
-	},
 	"build": {
-		"appId": "skizzle",
-		"compression": "normal",
+		"appId": "com.axa.skizzle",
 		"productName": "Skizzle",
-		"copyright": "Copyright © 2020 Axa France IARD / Axa France VIE",
-		"win": {
-			"target": "nsis"
-		},
+		"artifactName": "Skizzle-${version}-${arch}.${ext}",
+		"copyright": "Copyright © 2021 Axa France IARD / Axa France VIE",
+		"asar": true,
+		"generateUpdatesFilesForAllChannels": true,
+		"forceCodeSigning": false,
+		"detectUpdateChannel": true,
+		"npmRebuild": true,
+		"buildDependenciesFromSource": false,
+		"afterSign": "electron-builder-notarize",
 		"files": [
-			"public/**/*",
-			"node_modules/**/*"
+			"public/",
+			"node_modules/"
 		],
-		"mac": {
-			"type": "distribution",
+		"win": {
 			"target": [
-				"dmg"
-			],
-			"category": "public.app-category.news"
+				{
+					"target": "nsis",
+					"arch": [
+						"x64"
+					]
+				}
+			]
 		},
+		"mac": {
+			"artifactName": "Skizzle-macos.${ext}",
+			"category": "public.app-category.developer-tools",
+			"icon": "buildResources/icon.icns",
+			"hardenedRuntime": true,
+			"gatekeeperAssess": false,
+			"entitlements": "buildResources/entitlements.mac.plist",
+			"entitlementsInherit": "buildResources/entitlements.mac.plist",
+			"target": [
+				{
+					"target": "dmg",
+					"arch": [
+						"x64"
+					]
+				},
+				{
+					"target": "zip",
+					"arch": [
+						"x64"
+					]
+				}
+			]
+		},
+		"dmg": {
+			"sign": false,
+			"contents": [
+				{
+					"x": 110,
+					"y": 150
+				},
+				{
+					"x": 240,
+					"y": 150,
+					"type": "link",
+					"path": "/Applications"
+				}
+			]
+		},
+		"nsis": {
+			"installerIcon": "buildResources/icon.ico",
+			"uninstallerIcon": "buildResources/icon.ico",
+			"artifactName": "Skizzle-setup.${ext}",
+			"shortcutName": "SKZ"
+		},
+		"publish": [
+			{
+				"provider": "github",
+				"owner": "AxaGuilDEv",
+				"repo": "Skizzle"
+			}
+		],
 		"directories": {
 			"buildResources": "buildResources/"
 		}
 	},
-	"husky": {
-		"hooks": {
-			"pre-commit": "npm run precommit && npm run package-lock-sanitizer && git add package-lock.json",
-			"commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-		}
-	},
-	"lint-staged": {
-		"*.js": [
-			"eslint --fix"
-		]
+	"msw": {
+		"workerDirectory": "public"
 	}
 }

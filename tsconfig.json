@@ -1,9 +1,19 @@
 {
-	"compilerOptions": {
-		"types": ["node"]
-	},
 	"extends": "@tsconfig/svelte/tsconfig.json",
+	"compilerOptions": {
+		"typeRoots": [
+			"node_modules/@types"
+		],
+		"allowJs": true,
+		"skipLibCheck": true,
+		"resolveJsonModule": true,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"moduleResolution": "node",
+		"allowSyntheticDefaultImports": true,
+		"isolatedModules": true,
+		"baseUrl": "src"
+	},
 	"include": ["src/**/*"],
-	"exclude": ["node_modules/*", "__sapper__/*", "public/*"],
-	"baseUrl": "."
+	"exclude": ["node_modules/*", "__sapper__/*", "public/*", "tools/*"],
 }

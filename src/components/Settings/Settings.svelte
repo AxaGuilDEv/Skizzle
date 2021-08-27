@@ -1,101 +1,133 @@
-<script>
-	const app = require('electron');
-	import SettingsRefresh from './SettingsRefresh.svelte';
-	import SettingsStartup from './SettingsStartup.svelte';
-	import SettingsOrganizations from './SettingsOrganizations.svelte';
-	import SettingsTheme from './SettingsTheme.svelte';
-	import SettingsLanguage from './SettingsLanguage.svelte';
-	import { removeItem } from '../../shared/storage';
-	import { cleanStore, language } from '../../shared/store';
-	import { clear } from '../../shared/requester';
+<script lang="ts">
+	import AccountTitle from 'components/AccountTitle';
+	import Fieldset from 'components/Fieldset';
+	import Range from 'components/Range';
+	import { ThemeEnum } from 'models/skizzle';
+	import { settings } from 'shared/stores/default.store';
+	import Icons from 'components/icons';
+	import Switch from 'components/Switch';
 
-	app.ipcRenderer.on('loggedOut', () => {
-		removeItem('clientToken');
-		cleanStore();
-		clear();
-	});
-
-	const logout = () => {
-		app.ipcRenderer.send('logout');
-	};
-
-	const components = [
-		{
-			state: 'refresh',
-			label: language.getWord('Refreshment'),
-			className: 'skz-settings-button',
-			component: SettingsRefresh,
-			action: () => setSelected('refresh'),
-		},
-		{
-			state: 'startup',
-			label: language.getWord('StartUp'),
-			className: 'skz-settings-button',
-			component: SettingsStartup,
-			action: () => setSelected('startup'),
-		},
-		{
-			state: 'organizations',
-			label: language.getWord('Organizations'),
-			className: 'skz-settings-button',
-			component: SettingsOrganizations,
-			action: () => setSelected('organizations'),
-		},
-		{
-			state: 'languages',
-			label: language.getWord('Languages'),
-			className: 'skz-settings-button',
-			component: SettingsLanguage,
-			action: () => setSelected('languages'),
-		},
-		{
-			state: 'theme',
-			label: language.getWord('Theme'),
-			className: 'skz-settings-button',
-			component: SettingsTheme,
-			action: () => setSelected('theme'),
-		},
-		{
-			label: `${language.getWord('Version')} ${app.remote.app.getVersion()}`,
-			className: 'skz-settings-version',
-			action: () =>
-				app.shell.openExternal(
-					'https://github.com/AxaGuilDEv/Skizzle/blob/master/CHANGELOG.md',
-				),
-		},
-		{
-			label: language.getWord('SignOut'),
-			className: 'skz-settings-logout',
-			action: logout,
-		},
-	];
-
-	let selected = {
-		state: '',
-	};
-
-	const setSelected = state => {
-		selected = components.find(x => x.state === state);
-	};
+	let currentPlatform: string = navigator.platform === 'Win32' ? 'Windows' : 'macOS';
 </script>
 
-<style src="./Settings.scss">
+<div class="content">
+	<form>
+		<AccountTitle>Réglages</AccountTitle>
 
-</style>
+		<Fieldset
+			title="Rafraichissement"
+			intro="Réglez ici le délai qu'utilisera Skizzle pour rafraichir les données."
+			outro={`Skizzle rafraichira les données toutes les ${
+				$settings.refresh_delay !== 1 ? `${$settings.refresh_delay} minutes` : '60 secondes'
+			}`}
+		>
+			<div class="field">
+				<Range bind:value={$settings.refresh_delay} min={5} step={5} max={30} />
+			</div>
+		</Fieldset>
 
-<div class="skz-settings">
-	<div class="skz-settings-field">
-		{#each components as component}
-			<button class={component.className} on:click={component.action}>
-				{component.label}
-			</button>
-		{/each}
-	</div>
-	<div
-		class="skz-settings-field slidable {selected.state ? '' : 'slidable--open'}">
-		<svelte:component
-			this={selected.component}
-			title={selected.label}
-			init={() => (selected = { ...selected, state: '' })} />
-	</div>
+		<Fieldset
+			title="Au démarrage"
+			outro={`${
+				$settings.launch_at_startup
+					? 'Skizzle se lancera automatiquement à chaque démarrage de '
+					: 'Skizzle ne se lancera pas au démarrage de '
+			} ${currentPlatform}.`}
+		>
+			<Switch
+				vspace={2}
+				bind:active={$settings.launch_at_startup}
+				label="Lancer Skizzle au démarrage"
+			/>
+			<p class="text" />
+		</Fieldset>
+
+		<Fieldset
+			title="Menu compact"
+			intro="Ce paramètre permet de réduire la largeur de la barre latérale de navigation."
+		>
+			<Switch bind:active={$settings.compact} label="Mode compact" />
+		</Fieldset>
+
+		<Fieldset title="Langue" intro="Choisissez ici la langue de l'interface de Skizzle.">
+			<select>
+				<option value={$settings.language}>{$settings.language}</option>
+			</select>
+		</Fieldset>
+
+		<Fieldset title="Proxy" intro="URL du serveur de proxy">
+			<input id="proxy" type="url" bind:value={$settings.proxy} />
+		</Fieldset>
+
+		<Fieldset title="Theme" intro="Choisissez un theme pour l'interface de Skizzle.">
+			<div class="field">
+				{#each Object.values(ThemeEnum) as value}
+					<input
+						name="color"
+						id={value}
+						type="radio"
+						checked={$settings.theme === value}
+						on:change={() =>
+							settings.update(settings => ({
+								...settings,
+								theme: value
+							}))}
+					/>
+					<label class="ui" for={value}>
+						<Icons.UI color={value} />
+					</label>
+				{/each}
+			</div>
+		</Fieldset>
+	</form>
 </div>
+
+<style>
+	.content {
+		flex: 1 0 auto;
+		padding: 1rem;
+	}
+
+	.field {
+		display: flex;
+	}
+
+	.field :global(svg) {
+		display: block;
+		width: 15rem;
+		height: auto;
+		border: 4px solid #fff;
+	}
+
+	[type='radio'] {
+		display: none;
+	}
+
+	.field :global([type='range']) {
+		max-width: 15rem;
+	}
+
+	.ui {
+		opacity: 0.5;
+		margin-right: 1rem;
+		cursor: pointer;
+		transition: opacity linear 0.2s, box-shadow linear 0.2s;
+	}
+
+	.ui:hover {
+		opacity: 1;
+	}
+
+	input:checked + .ui {
+		opacity: 1;
+		box-shadow: 0 0 0 4px var(--color);
+	}
+
+	form :global(h1) {
+		margin-bottom: 2rem;
+	}
+
+	.field {
+		margin-bottom: 1rem;
+	}
+</style>

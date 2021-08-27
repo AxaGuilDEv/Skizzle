@@ -1,0 +1,6 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+npm run prelint
+npm run package-lock-sanitizer
+git add package-lock.json

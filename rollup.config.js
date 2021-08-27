@@ -1,17 +1,44 @@
 import svelte from 'rollup-plugin-svelte';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import replace from '@rollup/plugin-replace';
+import nodePolyfills from 'rollup-plugin-node-polyfills';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import filesize from 'rollup-plugin-filesize';
 import typescript from '@rollup/plugin-typescript';
+import css from 'rollup-plugin-css-only';
+import svg from 'rollup-plugin-svelte-svg';
 
 const createPreprocessors = require('./svelte.config').createPreprocessors;
 const production = !process.env.ROLLUP_WATCH;
 
+function serve() {
+	let server;
+
+	function toExit() {
+		if (server) server.kill(0);
+	}
+
+	return {
+		writeBundle() {
+			if (server) return;
+			server = require('child_process').spawn(
+				'npm',
+				['run', 'electron'],
+				{
+					stdio: ['ignore', 'inherit', 'inherit'],
+					shell: true,
+				},
+			);
+
+			process.on('SIGTERM', toExit);
+			process.on('exit', toExit);
+		},
+	};
+}
+
 export default {
-	input: 'src/main.ts',
+	input: 'src/index.ts',
 	output: {
 		sourcemap: !production,
 		format: 'iife',
@@ -19,26 +46,28 @@ export default {
 		file: 'public/build/bundle.js',
 	},
 	plugins: [
-		replace({
-			process: JSON.stringify({
-				env: {
-					isProd: production,
-				},
-			}),
-		}),
+		svg(),
+		nodePolyfills(),
 		svelte({
-			dev: !production,
-			preprocess: createPreprocessors(!production),
-			css: css => {
-				css.write('bundle.css', !production);
+			compilerOptions: {
+				dev: !production,
 			},
+			preprocess: createPreprocessors(!production),
+		}),
+		css({
+			output: 'bundle.css',
+			sourceMap: !production,
 		}),
 		resolve({
 			browser: true,
 			dedupe: ['svelte'],
 		}),
 		commonjs(),
-		typescript({ sourceMap: !production }),
+		typescript({
+			sourceMap: !production,
+			inlineSources: !production,
+		}),
+		!production && serve(),
 		!production && livereload('public'),
 		production && terser(),
 		filesize(),

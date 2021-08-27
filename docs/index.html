@@ -1,137 +1,157 @@
 <!DOCTYPE html>
 <html lang="fr">
-	<head>
-		<title>Skizzle - Toutes vos PR dans une app.</title>
-		<link rel="stylesheet" href="styles.css" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-	</head>
-	<body>
-		<main class="skz-hero">
-			<header class="skz-header">
-				<img class="skz-logo" src="logo-skizzle-dark-context.svg" alt="Skizzle" />
-				<a href="https://github.com/AxaGuilDEv/Skizzle" class="skz-github">
-					Github
-				</a>
-			</header>
-			<section class="skz-hero-content">
-				<h1 class="skz-title">Toutes vos pull requests dans une app.</h1>
-				<img
-					class="skz-illustration"
-					src="illustration.svg"
-					alt="Skizzle regroupe vos PR."
-				/>
-				<a class="skz-download" download>Télécharger Skizzle</a>
+
+<head>
+	<title>Skizzle - Toutes vos PR dans une app.</title>
+	<link rel="stylesheet" href="styles.css" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" />
+	<link href="https://fonts.googleapis.com/css2?family=Roboto&family=Roboto+Slab:wght@500&display=swap"
+		rel="stylesheet" />
+</head>
+
+<body>
+	<main class="skz-hero">
+		<header class="skz-header">
+			<img class="skz-logo" src="logo.svg" alt="Skizzle" />
+		</header>
+		<section class="skz-hero-content">
+			<h1 class="skz-title">Your team's pull requests at a glance.</h1>
+			<p>
+				Skizzle is a pull request manager that allows you see all your teams work
+				quickly in a single view. It works with your
+				<b>Azure DevOps</b>
+				and
+				<b>Github</b>
+				accounts.
+			</p>
+			<img class="skz-illustration" src="screenshot2.png" alt="Skizzle regroupe vos PR." />
+			<a class="skz-download" download>Download Skizzle for macOS</a>
+			<a class="skz-secondary-download" download>Download Skizzle for Windows</a>
+		</section>
+	</main>
+	<div class="skz-content">
+		<main class="skz-details">
+			<section class="skz-detail">
+				<h2>As a software engineer</h2>
+				<p>
+					Don't waste time by sending your pull requests to your colleagues anymore!
+					Skizzle will notify them, you can focus on your work.
+				</p>
+			</section>
+			<section class="skz-detail">
+				<h2>As a tech leader</h2>
+				<p>
+					Never miss a code review! Skizzle can show you every kind of pull request
+					: refactor, bug fixing... with custom views, it's up to you!
+				</p>
+			</section>
+			<section class="skz-detail">
+				<h2>As an engineering manager</h2>
+				<p>
+					With custom lists by project, you can easily see you team progress for
+					every project.
+				</p>
 			</section>
 		</main>
-		<div class="skz-content">
-			<main class="skz-details">
-				<section class="skz-detail">
-					<h2>Outil de collaboration entre développeurs</h2>
+	</div>
+	<div class="skz-features">
+		<ul>
+			<li>
+				<img src="./list.svg" />
+				<div>
+					<h3>Custom lists</h3>
 					<p>
-						Skizzle permet de récupérer
-						<strong>toutes les pull requests</strong>
-						des projets qui vous intéressent depuis votre compte Azure DevOps. Dans
-						une même interface, vous voyez d'un coup d'oeil la progression de vos
-						équipes de développement.
+						Based on all your followed repositories, you can create
+						<b>custom views</b>
+						with a lot of settings. Filter by project, tag etc.
 					</p>
-				</section>
-				<section class="skz-detail">
-					<h2>Multi équipes</h2>
+				</div>
+			</li>
+			<li>
+				<img src="./account.svg" />
+				<div>
+					<h3>All your accounts in one place</h3>
 					<p>
-						Que vous fassiez partie d'une ou plusieurs équipes, Skizzle est l'outil
-						idéal pour gérer vos
-						<strong>revue de code</strong>
-						. Surveillez facilement les pull requests de plusieurs projets sur
-						différentes équipes.
+						Skizzle can get pull requests from
+						<b>Azure DevOps</b>
+						and
+						<b>Github</b>
+						, other providers are coming, stay tuned!
 					</p>
-				</section>
-			</main>
-			<main class="skz-details">
-				<section class="skz-detail">
-					<h2>Abonnez-vous aux projets qui vous intéressent</h2>
+				</div>
+			</li>
+			<li>
+				<img src="./notifications.svg" />
+				<div>
+					<h3>Notifications</h3>
 					<p>
-						Tous les projets de votre compte ne sont pas toujours intéressants.
-						Skizzle récupère les repositories des projets auxquels vous avez accès sur
-						votre compte Azure Devops.
-						<strong>Abonnez-vous</strong>
-						à ceux qui vous intéressent, Skizzle vous liste les pulls requests en
-						temps réel.
+						Skizzle send you
+						<b>notifications</b>
+						when new pull requests are coming. Never ask for a review anymore!
 					</p>
-				</section>
-				<section class="skz-detail">
-					<h2>Soyez toujours au courant</h2>
+				</div>
+			</li>
+			<li>
+				<img src="./share.svg" />
+				<div>
+					<h3>Share your projects with your team</h3>
 					<p>
-						À chaque nouvelle pull request, Skizzle vous envoie
-						<strong>une notification</strong>
-						. Mais Skizzle sait quand vous ne souhaitez pas être dérangé et ne vous
-						enverra rien si votre ordinateur est en mode "Ne pas déranger".
+						Easily
+						<b>share</b>
+						your followed repositories and your custom lists with your teammates.
 					</p>
-				</section>
-			</main>
-			<main class="skz-details">
-				<img src="ui.jpg" />
-				<section class="skz-detail">
-					<h2>Une liste efficace</h2>
-					<p>
-						Skizzle permet de
-						<strong>filtrer</strong>
-						la liste affichée en fonction de tags, ou d'autres critères afin d'avoir
-						une liste de pull requests toujours pertinente pour vous.
-					</p>
-				</section>
-				<section class="skz-detail">
-					<h2>Skizzle s'adapte à vos préférences</h2>
-					<p>
-						L'interface de Skizzle est conçue pour s'adapter automatiquement à vos
-						préférences de
-						<strong>mode sombre</strong>
-						ou de mode "Ne pas déranger". Vous pouvez également personnaliser
-						l'interface pour la rendre plus compacte.
-					</p>
-				</section>
-			</main>
+				</div>
+			</li>
+		</ul>
+	</div>
+	<footer class="skz-footer">
+		<a class="skz-download" download>Download Skizzle for macOS</a>
+		<div class="doge">
+			<span>Wow.</span>
+			<span>Such download</span>
+			<span>Many good app</span>
+			<span>Very enjoyable</span>
+			<span>Much code reviews</span>
+			<span>So thank you</span>
 		</div>
-		<footer class="skz-footer">
-			<a class="skz-download" download>Télécharger Skizzle</a>
-			<p>
-				Skizzle est un projet open source créé par
-				<a href="https://github.com/Debaerdm">Mathieu De Baerdemaeker</a>
-				et
-				<a href="https://github.com/itupix">Jérôme Boukorras</a>
-				de la
-				<a href="https://axaguildev.github.io/">GuilDevOpen AXA France</a>
-				, Illustration de
-				<a href="https://www.vecteezy.com/free-vector/female-developer">Vecteezy</a>
-			</p>
-		</footer>
-		<script>
-			var version = '1.1.2';
+		<p>
+			Skizzle is an
+			<a href="https://github.com/AxaGuilDEv/Skizzle">open source project</a>
+			created by the
+			<a href="https://axaguildev.github.io/">GuilDevOpen AXA France</a>
+			.
+		</p>
+	</footer>
+	<script>
+		var version = '1.2.0';
 
-			function getFileName() {
-				var platform = window.navigator.platform;
-				var macosPlatforms = ['Macintosh', 'MacIntel', 'MacPPC', 'Mac68K'];
-				var fileName =
-					'https://github.com/AxaGuilDEv/Skizzle/releases/download/v' +
-					version +
-					'/Skizzle-' +
-					(macosPlatforms.indexOf(platform) !== -1 ? '' : 'Setup-') +
-					version;
+		function getFileName() {
+			var platform = window.navigator.platform;
+			var macosPlatforms = ['Macintosh', 'MacIntel', 'MacPPC', 'Mac68K'];
+			var fileName =
+				'https://github.com/AxaGuilDEv/Skizzle/releases/download/v' +
+				version +
+				'/Skizzle-' +
+				(macosPlatforms.indexOf(platform) !== -1 ? '' : 'Setup-') +
+				version;
 
-				if (macosPlatforms.indexOf(platform) !== -1) {
-					return fileName + '.dmg';
-				}
-
-				return fileName + '.exe';
+			if (macosPlatforms.indexOf(platform) !== -1) {
+				return fileName + '.dmg';
 			}
 
-			document.addEventListener('DOMContentLoaded', () => {
-				var fileName = getFileName();
-				var downloadButtons = document.querySelectorAll('.skz-download');
+			return fileName + '.exe';
+		}
 
-				downloadButtons.forEach(function (button) {
-					button.setAttribute('href', fileName);
-				});
+		document.addEventListener('DOMContentLoaded', () => {
+			var fileName = getFileName();
+			var downloadButtons = document.querySelectorAll('.skz-download');
+
+			downloadButtons.forEach(function (button) {
+				button.setAttribute('href', fileName);
 			});
-		</script>
-	</body>
+		});
+	</script>
+</body>
+
 </html>

@@ -1,14 +1,37 @@
+const esModules = ["svelte-highlight"].join("|")
+
 module.exports = {
-	setupFiles: ['jest-localstorage-mock', './src/setupTests.js'],
-	transform: {
-		'\\.(ts)$': 'ts-jest',
-		'^.+\\.svelte$': ['svelte-jester', { preprocess: true }],
-		'^.+\\.js$': 'babel-jest',
-	},
-	moduleFileExtensions: ['js', 'ts', 'json', 'svelte'],
-	testPathIgnorePatterns: ['node_modules'],
-	transformIgnorePatterns: ['node_modules'],
+  testEnvironment: 'jsdom',
+	setupFiles: ['jest-localstorage-mock'],
+  verbose: true,
+  testMatch: ["**/__tests__/**/*.+(ts|tsx|js)", "**/?(*.)+(spec).+(ts|tsx|js)"],
+  clearMocks: true,
+  transform: {
+    "^.+\\.(js|mjs)$": "babel-jest",
+    "^.+\\.ts$": "ts-jest",
+    "^.+\\.svelte$": ["svelte-jester", { "preprocess": true }],
+    ".+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$": "jest-transform-stub"
+  },
+  moduleDirectories: ["src","node_modules"],
+  moduleFileExtensions: [
+    "js",
+    "mjs",
+    "ts",
+    "svelte"
+  ],
+  coverageDirectory: "coverage",
+  coverageReporters: ["json", "lcov", "text", "clover", "html"],
+  collectCoverageFrom: [
+    "src/**/*.js",
+    "src/**/*.svelte",
+    "src/**/*.ts",
+    "!src/tests/**/*"
+  ],
+  coverageProvider: "babel",
+  coveragePathIgnorePatterns: [
+    ".*\\.d\\.ts"
+  ],
+  transformIgnorePatterns: [`/node_modules/(?!${esModules})`],
 	bail: false,
-	verbose: true,
-	setupFilesAfterEnv: ['@testing-library/jest-dom/extend-expect'],
+  setupFilesAfterEnv: ['@testing-library/jest-dom/extend-expect', './src/setupTests.ts']
 };
